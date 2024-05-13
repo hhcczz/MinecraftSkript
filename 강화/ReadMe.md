@@ -1,5 +1,5 @@
 # 랜덤하게 아이템을 지급해주는 광산 스크립트
-> Skript Version : Skript-beta-3
+> Skript Version : Skript-beta-3  
 > Minecraft Version : 1.12.2
 
 
@@ -25,10 +25,12 @@
 
 ## 명령어
 > 관리자
-- 관리자 명령어는 따로 없으며 노드로 수정하셔서 사용하시면 됩니다.
++ 관리자 명령어는 따로 없으며 노드로 수정하셔서 사용하시면 됩니다.
 
+  
 > 유저
-![강화-유저명령어](https://github.com/hhcczz/MinecraftSkript/assets/101077489/8a21bba8-dad1-4b38-bec6-062950cbbb28)
+
+![강화-유저명령어](https://github.com/hhcczz/MinecraftSkript/assets/101077489/8a21bba8-dad1-4b38-bec6-062950cbbb28)  
 
 ## 기본 설정
 
