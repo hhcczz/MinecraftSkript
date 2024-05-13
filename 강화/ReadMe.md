@@ -1,6 +1,6 @@
 # 랜덤하게 아이템을 지급해주는 광산 스크립트
 > Skript Version : Skript-beta-3
-> Minecraft Version : 1.12.2
+Minecraft Version : 1.12.2
 
 ## 제작 의도
 
