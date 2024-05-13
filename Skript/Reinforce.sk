@@ -1,0 +1,458 @@
+options:
+	S : &3[ &bLekoEE &3]&f
+
+command /강화 [<text>] [<text>]:
+	trigger:
+		if arg 1 is not set:
+			send ""
+			send "{@S} 강화 시스템"
+			send ""
+			send "{@S} /강화 진행 [ &a켜기 &f/ &c끄기&f ] &7&l| &f강화 상태 변경"
+			send "{@S} /강화 파방 [ &a켜기 &f/ &c끄기&f ] &7&l| &f한 번 강화당 비용 2.5배 &c증가"
+			send ""
+			send "{@S} /강화 무기설명"
+			send "{@S} /강화 곡괭이설명"
+			send ""
+			stop
+
+		if arg 1 is not "무기설명" or "곡괭이설명" or "진행" or "파방":
+			send title "&7&l[!] &f강화" with subtitle "&f실행시킨 명령어를 다시 한 번 확인해주세요." to player for 2 seconds
+			play sound "entity.villager.no" with volume 2 with pitch 1 to player
+			stop
+
+		if arg 1 is "파방":
+			if arg 2 is "켜기":
+				if {Leko::reinforce_unbreaking::%uuid of player%} is true:
+					send title "&7&l[!] &f강화" with subtitle "&f이미 파방 강화 모드가 &a실행 &f되어있습니다." to player for 2 seconds
+					play sound "entity.villager.no" with volume 2 with pitch 1 to player
+					stop
+				else:
+					set {Leko::reinforce_unbreaking::%uuid of player%} to true
+					send title "&7&l[!] &f강화" with subtitle "&f파방 강화 모드 &a&l실행!" to player for 2 seconds
+					play sound "entity.villager.yes" with volume 2 with pitch 1 to player
+					stop
+
+			if arg 2 is "끄기":
+				if {Leko::reinforce_unbreaking::%uuid of player%} is not set:
+					send title "&7&l[!] &f강화" with subtitle "&f이미 파방 강화 모드가 &c종료 &f되어있습니다." to player for 2 seconds
+					play sound "entity.villager.no" with volume 2 with pitch 1 to player
+					stop
+				else:
+					clear {Leko::reinforce_unbreaking::%uuid of player%}
+					send title "&7&l[!] &f강화" with subtitle "&f파방 강화 모드 &c&l종료!" to player for 2 seconds
+					play sound "entity.villager.yes" with volume 2 with pitch 1 to player
+					stop
+			else:
+				send title "&7&l[!] &f강화" with subtitle "&f실행시킨 명령어를 다시 한 번 확인해주세요." to player for 2 seconds
+				play sound "entity.villager.no" with volume 2 with pitch 1 to player
+				stop
+
+		if arg 1 is "진행":
+			if arg 2 is "켜기":
+				if {Leko::reinforce_check::%uuid of player%} is true:
+					send title "&7&l[!] &f강화" with subtitle "&f이미 강화 모드가 &a실행 &f되어있습니다." to player for 2 seconds
+					play sound "entity.villager.no" with volume 2 with pitch 1 to player
+					stop
+				else:
+					set {Leko::reinforce_check::%uuid of player%} to true
+					send title "&7&l[!] &f강화" with subtitle "&f강화 모드 &a&l실행!" to player for 2 seconds
+					play sound "entity.villager.yes" with volume 2 with pitch 1 to player
+					stop
+
+			if arg 2 is "끄기":
+				if {Leko::reinforce_check::%uuid of player%} is not set:
+					send title "&7&l[!] &f강화" with subtitle "&f이미 강화 모드가 &c종료 &f되어있습니다." to player for 2 seconds
+					play sound "entity.villager.no" with volume 2 with pitch 1 to player
+					stop
+				else:
+					clear {Leko::reinforce_check::%uuid of player%}
+					send title "&7&l[!] &f강화" with subtitle "&f강화 모드 &c&l종료!" to player for 2 seconds
+					play sound "entity.villager.yes" with volume 2 with pitch 1 to player
+					stop
+			else:
+				send title "&7&l[!] &f강화" with subtitle "&f실행시킨 명령어를 다시 한 번 확인해주세요." to player for 2 seconds
+				play sound "entity.villager.no" with volume 2 with pitch 1 to player
+				stop
+
+
+
+		if arg 1 is "무기설명":
+			send "{@S} &f무기 강화 시스템"
+			send ""
+			send "{@S} &b&l[ 강화 ] &7- &f날카로움 &e&lV &f-> &e&lVI"
+			send "{@S} &b&l[ 강화 ] &7- &a성공 &f: 1.0%% &7&l| &c실패 &f97.5%% &7&l| &4파괴 &f1.5%%"
+			send ""
+			send "{@S} &b&l[ 강화 ] &7- &f날카로움 &e&lVI &f-> &e&lVII"
+			send "{@S} &b&l[ 강화 ] &7- &a성공 &f: 3.0%% &7&l| &c실패 &f94.0%% &7&l| &4파괴 &f3.0%%"
+			send ""
+			send "{@S} &b&l[ 강화 ] &7- &f날카로움 &e&lVII &f-> &e&lVIII"
+			send "{@S} &b&l[ 강화 ] &7- &a성공 &f: 3.0%% &7&l| &c실패 &f90.0%% &7&l| &4파괴 &f7.0%%"
+			send ""
+			send "{@S} &b&l[ 강화 ] &7- &f날카로움 &e&lVIII &f-> &e&lIX"
+			send "{@S} &b&l[ 강화 ] &7- &a성공 &f: 3.0%% &7&l| &c실패 &f85.0%% &7&l| &4파괴 &f12.0%%"
+			send ""
+			send "{@S} &b&l[ 강화 ] &7- &f날카로움 &e&lVI &f이상부터 강화 &c실패&f시 날카로움이 하락합니다."
+			send "{@S} &b&l[ 강화 ] &7- &f강화 한 번당 요구 금액 &e&l100,000&f원"
+			stop
+
+		if arg 1 is "곡괭이설명":
+			send "{@S} &f곡괭이 강화 시스템"
+			send ""
+			send "{@S} &b&l[ 강화 ] &7- &f행운 &e&lV &f-> &e&lVI"
+			send "{@S} &b&l[ 강화 ] &7- &a성공 &f: 4.0%% &7&l| &c실패 &f95.8%% &7&l| &4파괴 &f0.2%%"
+			send ""
+			send "{@S} &b&l[ 강화 ] &7- &f행운 &e&lVI &f-> &e&lVII"
+			send "{@S} &b&l[ 강화 ] &7- &a성공 &f: 4.0%% &7&l| &c실패 &f93.0%% &7&l| &4파괴 &f3.0%%"
+			send ""
+			send "{@S} &b&l[ 강화 ] &7- &f행운 &e&lVII &f-> &e&lVIII"
+			send "{@S} &b&l[ 강화 ] &7- &a성공 &f: 4.0%% &7&l| &c실패 &f89.0%% &7&l| &4파괴 &f7.0%%"
+			send ""
+			send "{@S} &b&l[ 강화 ] &7- &f행운 &e&lVI &f이상부터 강화 &c실패&f시 행운이 하락합니다."
+			send "{@S} &b&l[ 강화 ] &7- &f강화 한 번당 요구 금액 &e&l80,000&f원"
+			stop
+
+on rightclick on entity:
+	if entity's name is "&7[&b강화&7] 대장장이":
+		if {Leko::reinforce_check::%uuid of player%} is not true:
+			send title "&7&l[!] &f강화" with subtitle "&f강화 모드를 실행시켜주세요! &e&l/강화" to player for 2 seconds
+			stop
+
+		if {Leko::reinforce_stop::%uuid of player%} is true:
+			send title "&7&l[!] &f강화" with subtitle "&f강화에 &a&l성공 &f하셔서 5초의 재정비 시간을 드립니다." to player for 5 seconds
+			stop
+
+		if player's tool's fortune enchant level is set:
+			if player's tool's fortune enchant level < 5:
+				send title "&7&l[!] &f강화" with subtitle "&f곡괭이 행운이 &e5 &f이상일때 강화 가능합니다." to player for 2 seconds
+				stop
+			if player's tool's fortune enchant level >= 8:
+				send title "&7&l[!] &f강화" with subtitle "&f곡괭이 행운 강화는 &e8 &f까지 강화 가능합니다." to player for 2 seconds
+				stop
+
+			if {Leko::reinforce_unbreaking::%uuid of player%} is set:
+				if player's money < 200000:
+					send title "&7&l[!] &f강화" with subtitle "&f파방 강화 소지 금액 &e&l200,000&f원 이상부터 강화 가능합니다." to player for 2 seconds
+					stop
+			else:
+				if player's money < 80000:
+					send title "&7&l[!] &f강화" with subtitle "&f일반 강화 소지 금액 &e&l80,000&f원 이상부터 강화 가능합니다." to player for 2 seconds
+					stop
+
+			if {Leko::reinforce_unbreaking::%uuid of player%} is set:
+				remove 200000 from player's money
+			else:
+				remove 80000 from player's money
+
+			set {_item} to colored name of player's tool
+			set {_Reinforce_Pickaxe} to random integer between 1 and 1000
+			if player's tool's fortune enchant level = 5:
+				if 1 <= {_Reinforce_Pickaxe}:
+					if {_Reinforce_Pickaxe} <= 40:
+						send title "&7&l[!] &f강화" with subtitle "&f곡괭이 행운 강화 &a&l성공! &e&l5 &f-> &e&l6" to player for 2 seconds
+						broadcast ""
+						broadcast "{@S} &b%player% &f님께서 곡괭이 행운 &e&lVI &f강화를 &a&l성공 &f하셨습니다."
+						broadcast "{@S} &f성공 곡괭이 : %{_item}%"
+						broadcast ""
+						play sound "entity.player.levelup" with volume 2.0 and pitch 1.0 at player for player
+						launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1
+						enchant the player's tool with fortune 6
+						set {Leko::reinforce_stop::%uuid of player%} to true
+						wait 5 seconds
+						clear {Leko::reinforce_stop::%uuid of player%}
+						stop
+
+				if 41 <= {_Reinforce_Pickaxe}:
+					if {_Reinforce_Pickaxe} <= 42:
+						if {Leko::reinforce_unbreaking::%uuid of player%} is set:
+							send title "&7&l[!] &f강화" with subtitle "&f곡괭이 행운 강화 &c&l실패! &e&l5 &f-> &e&l5" to player for 2 seconds
+							play sound "block.anvil.place" with volume 10 and pitch 2 for player
+							stop
+
+						else:
+							send title "&7&l[!] &f강화" with subtitle "&f곡괭이 &4&l파괴!" to player for 2 seconds
+							broadcast ""
+							broadcast "{@S} &f대장장이 손이 미끌려 &b%player% &f님의 곡괭이가 &4파괴 &f되었습니다. &e&lV"
+							broadcast "{@S} &f파괴 곡괭이 : %{_item}%"
+							broadcast ""
+							remove 1 of player's tool from player's tool
+							play sound "entity.generic.explode" with volume 2.0 and pitch 1.0 at player for player
+							stop
+
+				if 43 <= {_Reinforce_Pickaxe}:
+					if {_Reinforce_Pickaxe} <= 1000:
+						send title "&7&l[!] &f강화" with subtitle "&f곡괭이 행운 강화 &c&l실패! &e&l5 &f-> &e&l5" to player for 2 seconds
+						play sound "block.anvil.place" with volume 10 and pitch 2 for player
+						stop
+
+			if player's tool's fortune enchant level = 6:
+				if 1 <= {_Reinforce_Pickaxe}:
+					if {_Reinforce_Pickaxe} <= 40:
+						send title "&7&l[!] &f강화" with subtitle "&f곡괭이 행운 강화 &a&l성공! &e&l6 &f-> &e&l7" to player for 2 seconds
+						broadcast ""
+						broadcast "{@S} &b%player% &f님께서 곡괭이 행운 &e&lVII &f강화를 &a&l성공 &f하셨습니다."
+						broadcast "{@S} &f성공 곡괭이 : %{_item}%"
+						broadcast ""
+						play sound "entity.player.levelup" with volume 2.0 and pitch 1.0 at player for player
+						launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1
+						enchant the player's tool with fortune 7
+						set {Leko::reinforce_stop::%uuid of player%} to true
+						wait 5 seconds
+						clear {Leko::reinforce_stop::%uuid of player%}
+						stop
+
+				if 41 <= {_Reinforce_Pickaxe}:
+					if {_Reinforce_Pickaxe} <= 70:
+						if {Leko::reinforce_unbreaking::%uuid of player%} is set:
+							send title "&7&l[!] &f강화" with subtitle "&f곡괭이 행운 강화 &c&l실패! &e&l6 &f-> &e&l5" to player for 2 seconds
+							play sound "block.anvil.place" with volume 10 and pitch 2 for player
+							enchant the player's tool with fortune 5
+							stop
+
+						else:
+							send title "&7&l[!] &f강화" with subtitle "&f곡괭이 &4&l파괴!" to player for 2 seconds
+							broadcast ""
+							broadcast "{@S} &f대장장이 손이 미끌려 &b%player% &f님의 곡괭이가 &4파괴 &f되었습니다. &e&lVI"
+							broadcast "{@S} &f파괴 곡괭이 : %{_item}%"
+							broadcast ""
+							remove 1 of player's tool from player's tool
+							play sound "entity.generic.explode" with volume 2.0 and pitch 1.0 at player for player
+							stop
+
+				if 71 <= {_Reinforce_Pickaxe}:
+					if {_Reinforce_Pickaxe} <= 1000:
+						send title "&7&l[!] &f강화" with subtitle "&f곡괭이 행운 강화 &c&l실패! &e&l6 &f-> &e&l5" to player for 2 seconds
+						play sound "block.anvil.place" with volume 10 and pitch 2 for player
+						enchant the player's tool with fortune 5
+						stop
+
+			if player's tool's fortune enchant level = 7:
+				if 1 <= {_Reinforce_Pickaxe}:
+					if {_Reinforce_Pickaxe} <= 40:
+						send title "&7&l[!] &f강화" with subtitle "&f곡괭이 행운 강화 &a&l성공! &e&l7 &f-> &e&l8" to player for 2 seconds
+						broadcast ""
+						broadcast "{@S} &b%player% &f님께서 곡괭이 행운 &e&lVIII &f강화를 &a&l성공 &f하셨습니다."
+						broadcast "{@S} &f성공 곡괭이 : %{_item}%"
+						broadcast ""
+						play sound "entity.player.levelup" with volume 2.0 and pitch 1.0 at player for player
+						launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1
+						enchant the player's tool with fortune 8
+						set {Leko::reinforce_stop::%uuid of player%} to true
+						wait 5 seconds
+						clear {Leko::reinforce_stop::%uuid of player%}
+						stop
+
+				if 41 <= {_Reinforce_Pickaxe}:
+					if {_Reinforce_Pickaxe} <= 110:
+						if {Leko::reinforce_unbreaking::%uuid of player%} is set:
+							send title "&7&l[!] &f강화" with subtitle "&f곡괭이 행운 강화 &c&l실패! &e&l7 &f-> &e&l6" to player for 2 seconds
+							play sound "block.anvil.place" with volume 10 and pitch 2 for player
+							enchant the player's tool with fortune 6
+							stop
+
+						else:
+							send title "&7&l[!] &f강화" with subtitle "&f곡괭이 &4&l파괴!" to player for 2 seconds
+							broadcast ""
+							broadcast "{@S} &f대장장이 손이 미끌려 &b%player% &f님의 곡괭이가 &4파괴 &f되었습니다. &e&lVII"
+							broadcast "{@S} &f파괴 곡괭이 : %{_item}%"
+							broadcast ""
+							remove 1 of player's tool from player's tool
+							play sound "entity.generic.explode" with volume 2.0 and pitch 1.0 at player for player
+							stop
+
+				if 111 <= {_Reinforce_Pickaxe}:
+					if {_Reinforce_Pickaxe} <= 1000:
+						send title "&7&l[!] &f강화" with subtitle "&f곡괭이 행운 강화 &c&l실패! &e&l7 &f-> &e&l6" to player for 2 seconds
+						play sound "block.anvil.place" with volume 10 and pitch 2 for player
+						enchant the player's tool with fortune 6
+						stop
+
+		else if player's tool's sharpness enchant level is set:
+			if player's tool's sharpness enchant level < 5:
+				send title "&7&l[!] &f강화" with subtitle "&f검 혹은 도끼 날카로움이 &e5 &f이상일때 강화 가능합니다." to player for 2 seconds
+				stop
+			if player's tool's sharpness enchant level >= 9:
+				send title "&7&l[!] &f강화" with subtitle "&f검 혹은 도끼 날카로움 강화는 &e9 &f까지 강화 가능합니다." to player for 2 seconds
+				stop
+			if {Leko::reinforce_unbreaking::%uuid of player%} is set:
+				if player's money < 250000:
+					send title "&7&l[!] &f강화" with subtitle "&f파방 강화 소지 금액 &e&l250,000&f원 이상부터 강화 가능합니다." to player for 2 seconds
+					stop
+			else:
+				if player's money < 100000:
+					send title "&7&l[!] &f강화" with subtitle "&f일반 강화 소지 금액 &e&l100,000&f원 이상부터 강화 가능합니다." to player for 2 seconds
+					stop
+
+			if {Leko::reinforce_unbreaking::%uuid of player%} is set:
+				remove 250000 from player's money
+			else:
+				remove 100000 from player's money
+
+			set {_item} to colored name of player's tool
+			set {_Reinforce_Sword} to random integer between 1 and 1000
+			if player's tool's sharpness enchant level = 5:
+				if 1 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 10:
+						send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &a&l성공! &e&l5 &f-> &e&l6" to player for 2 seconds
+						broadcast ""
+						broadcast "{@S} &b%player% &f님께서 무기 날카로움 &e&lVI &f강화를 &a&l성공 &f하셨습니다."
+						broadcast "{@S} &f성공 무기 : %{_item}%"
+						broadcast ""
+						play sound "entity.player.levelup" with volume 2.0 and pitch 1.0 at player for player
+						launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1
+						enchant the player's tool with sharpness 6
+						set {Leko::reinforce_stop::%uuid of player%} to true
+						wait 5 seconds
+						clear {Leko::reinforce_stop::%uuid of player%}
+						stop
+
+				if 11 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 25:
+						if {Leko::reinforce_unbreaking::%uuid of player%} is set:
+							send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &c&l실패! &e&l5 &f-> &e&l5" to player for 2 seconds
+							play sound "block.anvil.place" with volume 10 and pitch 2 for player
+							stop
+
+						else:
+							send title "&7&l[!] &f강화" with subtitle "&f무기 &4&l파괴!" to player for 2 seconds
+							broadcast ""
+							broadcast "{@S} &f대장장이 손이 미끌려 &b%player% &f님의 무기가 &4파괴 &f되었습니다. &e&lV"
+							broadcast "{@S} &f파괴 무기 : %{_item}%"
+							broadcast ""
+							remove 1 of player's tool from player's tool
+							play sound "entity.generic.explode" with volume 2.0 and pitch 1.0 at player for player
+							stop
+
+				if 26 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 1000:
+						send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &c&l실패! &e&l5 &f-> &e&l5" to player for 2 seconds
+						play sound "block.anvil.place" with volume 10 and pitch 2 for player
+						stop
+
+			if player's tool's sharpness enchant level = 6:
+				if 1 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 30:
+						send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &a&l성공! &e&l6 &f-> &e&l7" to player for 2 seconds
+						broadcast ""
+						broadcast "{@S} &b%player% &f님께서 무기 날카로움 &e&lVII &f강화를 &a&l성공 &f하셨습니다."
+						broadcast "{@S} &f성공 무기 : %{_item}%"
+						broadcast ""
+						play sound "entity.player.levelup" with volume 2.0 and pitch 1.0 at player for player
+						launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1
+						enchant the player's tool with sharpness 7
+						set {Leko::reinforce_stop::%uuid of player%} to true
+						wait 5 seconds
+						clear {Leko::reinforce_stop::%uuid of player%}
+						stop
+
+				if 31 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 60:
+						if {Leko::reinforce_unbreaking::%uuid of player%} is set:
+							send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &c&l실패! &e&l6 &f-> &e&l5" to player for 2 seconds
+							play sound "block.anvil.place" with volume 10 and pitch 2 for player
+							enchant the player's tool with sharpness 5
+							stop
+
+						else:
+							send title "&7&l[!] &f강화" with subtitle "&f무기 &4&l파괴!" to player for 2 seconds
+							broadcast ""
+							broadcast "{@S} &f대장장이 손이 미끌려 &b%player% &f님의 무기가 &4파괴 &f되었습니다. &e&lVI"
+							broadcast "{@S} &f파괴 무기 : %{_item}%"
+							broadcast ""
+							remove 1 of player's tool from player's tool
+							play sound "entity.generic.explode" with volume 2.0 and pitch 1.0 at player for player
+							stop
+
+
+				if 61 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 1000:
+						send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &c&l실패! &e&l6 &f-> &e&l5" to player for 2 seconds
+						play sound "block.anvil.place" with volume 10 and pitch 2 for player
+						enchant the player's tool with sharpness 5
+						stop
+
+			if player's tool's sharpness enchant level = 7:
+				if 1 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 30:
+						send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &a&l성공! &e&l7 &f-> &e&l8" to player for 2 seconds
+						broadcast ""
+						broadcast "{@S} &b%player% &f님께서 무기 날카로움 &e&lVIII &f강화를 &a&l성공 &f하셨습니다."
+						broadcast "{@S} &f성공 무기 : %{_item}%"
+						broadcast ""
+						play sound "entity.player.levelup" with volume 2.0 and pitch 1.0 at player for player
+						launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1
+						enchant the player's tool with sharpness 8
+						set {Leko::reinforce_stop::%uuid of player%} to true
+						wait 5 seconds
+						clear {Leko::reinforce_stop::%uuid of player%}
+						stop
+
+				if 31 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 100:
+						if {Leko::reinforce_unbreaking::%uuid of player%} is set:
+							send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &c&l실패! &e&l7 &f-> &e&l6" to player for 2 seconds
+							play sound "block.anvil.place" with volume 10 and pitch 2 for player
+							enchant the player's tool with sharpness 6
+							stop
+
+						else:
+							send title "&7&l[!] &f강화" with subtitle "&f무기 &4&l파괴!" to player for 2 seconds
+							broadcast ""
+							broadcast "{@S} &f대장장이 손이 미끌려 &b%player% &f님의 무기가 &4파괴 &f되었습니다. &e&lVII"
+							broadcast "{@S} &f파괴 무기 : %{_item}%"
+							broadcast ""
+							remove 1 of player's tool from player's tool
+							play sound "entity.generic.explode" with volume 2.0 and pitch 1.0 at player for player
+							stop
+
+				if 101 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 1000:
+						send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &c&l실패! &e&l7 &f-> &e&l6" to player for 2 seconds
+						play sound "block.anvil.place" with volume 10 and pitch 2 for player
+						enchant the player's tool with sharpness 6
+						stop
+
+			if player's tool's sharpness enchant level = 8:
+				if 1 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 30:
+						send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &a&l성공! &e&l8 &f-> &e&l9" to player for 2 seconds
+						broadcast ""
+						broadcast "{@S} &b%player% &f님께서 무기 날카로움 &e&lIX &f강화를 &a&l성공 &f하셨습니다."
+						broadcast "{@S} &f성공 무기 : %{_item}%"
+						broadcast ""
+						play sound "entity.player.levelup" with volume 2.0 and pitch 1.0 at player for player
+						launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1
+						enchant the player's tool with sharpness 9
+						set {Leko::reinforce_stop::%uuid of player%} to true
+						wait 5 seconds
+						clear {Leko::reinforce_stop::%uuid of player%}
+						stop
+
+				if 31 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 150:
+						if {Leko::reinforce_unbreaking::%uuid of player%} is set:
+							send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &c&l실패! &e&l8 &f-> &e&l7" to player for 2 seconds
+							play sound "block.anvil.place" with volume 10 and pitch 2 for player
+							enchant the player's tool with sharpness 7
+							stop
+
+						else:
+							send title "&7&l[!] &f강화" with subtitle "&f무기 &4&l파괴!" to player for 2 seconds
+							broadcast ""
+							broadcast "{@S} &f대장장이 손이 미끌려 &b%player% &f님의 무기가 &4파괴 &f되었습니다. &e&lVIII"
+							broadcast "{@S} &f파괴 무기 : %{_item}%"
+							broadcast ""
+							remove 1 of player's tool from player's tool
+							play sound "entity.generic.explode" with volume 2.0 and pitch 1.0 at player for player
+							stop
+
+				if 151 <= {_Reinforce_Sword}:
+					if {_Reinforce_Sword} <= 1000:
+						send title "&7&l[!] &f강화" with subtitle "&f무기 날카로움 강화 &c&l실패! &e&l8 &f-> &e&l7" to player for 2 seconds
+						play sound "block.anvil.place" with volume 10 and pitch 2 for player
+						enchant the player's tool with sharpness 7
+						stop
+
+
+		else:
+			send title "&7&l[!] &f강화" with subtitle "&f인첸트가 부여된 검, 도끼, 곡괭이를 들고 우클릭해주세요. &e&l/강화" to player for 2 seconds
+			stop
