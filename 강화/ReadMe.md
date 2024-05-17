@@ -1,4 +1,4 @@
-# 랜덤하게 아이템을 지급해주는 광산 스크립트
+# 약탈서버에 쓸만한 강화 시스템
 > Skript Version : Skript-beta-3  
 > Minecraft Version : 1.12.2
 
