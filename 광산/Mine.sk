@@ -1,0 +1,198 @@
+options:
+	S : &3[ &bLekoEE &3]&f
+
+variables:
+	{Mineral_chance::Coal} = 0
+	{Mineral_chance::Iron} = 0
+	{Mineral_chance::Gold} = 0
+	{Mineral_chance::Diamond} = 0
+	{Mineral_chance::Emerald} = 0
+	{Mineral_chance::MAX} = 0
+	
+
+on break:
+	if event-block is stone:
+		set {_Gift} to random integer between 1 and {Mineral_chance::MAX}
+		if 1 <= {_Gift}:
+			if {_Gift} <= {Mineral_chance::Coal}:
+				send "{@S} 단단한 돌에서 &8석탄 &f을 획득하셨습니다."
+				give {chest_Mineral::1} to player
+				
+		if {Mineral_chance::Coal} + 1 <= {_Gift}:
+			if {_Gift} <= {Mineral_chance::Iron}:
+				send "{@S} 단단한 돌에서 &7철 &f을 획득하셨습니다."
+				give {chest_Mineral::2} to player
+				
+		if {Mineral_chance::Iron} + 1 <= {_Gift}:
+			if {_Gift} <= {Mineral_chance::Gold}:
+				send "{@S} 단단한 돌에서 &6금 &f을 획득하셨습니다."
+				give {chest_Mineral::3} to player
+				
+		if {Mineral_chance::Gold} + 1 <= {_Gift}:
+			if {_Gift} <= {Mineral_chance::Diamond}:
+				send "{@S} 단단한 돌에서 &b다이아몬드 &f를 획득하셨습니다."
+				give {chest_Mineral::4} to player
+				
+		if {Mineral_chance::Diamond} <= {_Gift}:
+			if {_Gift} <= {Mineral_chance::Emerald}:
+				send "{@S} 단단한 돌에서 &a에메랄드 &f를 획득하셨습니다."
+				give {chest_Mineral::5} to player
+	
+		set block to stone
+		stop
+command /확인:
+	trigger:
+		broadcast "%{Mineral_chance::Coal} + {Mineral_chance::MAX}%    %{Mineral_chance::MAX} + 1%"
+command /광산 [<text>] [<text>] [<integer>]:
+	trigger:
+		if player is not op:
+			stop
+		if arg 1 is not "확률" or "설정" or "확인" or "설명" or "확률초기화":
+			send ""
+			send "{@S} 광산 시스템 명령어"
+			send ""
+			send "{@S} /광산 설정    &7&l|    &b광산 아이템 설정"
+			send "{@S} /광산 확인    &7&l|    &b광산 확률 확인"
+			send "{@S} /광산 설명    &7&l|    &b확률 설정하는법 설명"
+			send "{@S} /광산 확률 <최대/석탄/철/금/다이아/에메랄드> <확률숫자>"
+			send "{@S} &6광산 확률은 끝과 처음이 맞물려야 합니다."
+			send ""
+			send "{@S} /광산 확률초기화    &7&l|    &c&l&n광산 확률 초기화"
+			send ""
+			stop
+		
+		if arg 1 is "확률초기화":
+			set {Mineral_chance::Coal} to 0
+			set {Mineral_chance::Iron} to 0
+			set {Mineral_chance::Gold} to 0
+			set {Mineral_chance::Diamond} to 0
+			set {Mineral_chance::Emerald} to 0
+			set {Mineral_chance::MAX} to 0
+			send ""
+			send "{@S} 성공적으로 확률 &c초기화&f를 진행하였습니다."
+			send ""
+			stop
+			
+		
+		if arg 1 is "설명":
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send ""
+			send "{@S} 광산 &6확률 &f설정에 대한 &a설명서&f입니다."
+			send ""
+			send "{@S} 광산 시스템은 돌을 캤을때 다양한 광물이 &a랜덤&f으로 등장하는 스크립트입니다."
+			send "{@S} &a랜덤&f으로 등장하는 확률을 보다 자유롭게 조작하기위해 제작하였습니다."
+			send ""
+			send "{@S} 설정은 항상 &6최대 설정&f부터 설정하셔야 합니다."
+			send "{@S} &6최대 설정&f은 전체 범위를 설정하는 것 입니다."
+			send "{@S} 범위가 &e10&f인 석탄을 캤을때 최대 확률이 &e100이면 10%%, 200이면 5%% &f으로 범위를 설정하는 것 입니다."
+			send "{@S} 범위는 항상 전 등급의 광물 최대 범위와 &6&n현 등급의 광물 최소 범위가 맞물려야 합니다. &e 1 ~ 20 -> 20 ~ 40"
+			send "{@S} 확률이 0%%이거나 -로 내려간다면 범위를 다시 확인해주세요."
+			send "{@S} 이외의 자세한 설명은 &a카페 영상을 확인해주세요."
+			send ""
+			stop
+		
+		if arg 1 is "설정":
+			open chest with 1 rows named "{@S} 광산 광물 설정" to player
+			wait 2 tick
+			set {_save_check} to 0
+			loop 9 times:
+				set slot {_save_check} of current inventory of player to {chest_Mineral::%loop-number%}
+				add 1 to {_save_check}
+			stop	
+				
+		if arg 1 is "확인":
+			send ""
+			send "{@S} 현재 확률 범위 &e&l1 ~ %{Mineral_chance::MAX}%"
+			send ""
+			send "{@S} 현재 &8석탄 &f확률 : &e&l%{Mineral_chance::Coal} / {Mineral_chance::MAX} * 100%%%    &7&l|    &e범위 : 1 ~ %{Mineral_chance::Coal}%"
+			send "{@S} 현재 &7철 &f확률 : &e&l%({Mineral_chance::Iron} - {Mineral_chance::Coal}) / {Mineral_chance::MAX} * 100%%%    &7&l|    &e범위 : %{Mineral_chance::Coal}% ~ %{Mineral_chance::Iron}%"
+			send "{@S} 현재 &e금 &f확률 : &e&l%({Mineral_chance::Gold} - {Mineral_chance::Iron}) / {Mineral_chance::MAX} * 100%%%    &7&l|    &e범위 : %{Mineral_chance::Iron}% ~ %{Mineral_chance::Gold}%"
+			send "{@S} 현재 &b다이아몬드 &f확률 : &e&l%({Mineral_chance::Diamond} - {Mineral_chance::Gold}) / {Mineral_chance::MAX} * 100%%%    &7&l|    &e범위 : %{Mineral_chance::Gold}% ~ %{Mineral_chance::Diamond}%"
+			send "{@S} 현재 &a에메랄드 &f확률 : &e&l%({Mineral_chance::Emerald} - {Mineral_chance::Diamond}) / {Mineral_chance::MAX} * 100%%%    &7&l|    &e범위 : %{Mineral_chance::Diamond}% ~ %{Mineral_chance::Emerald}%"
+			send ""
+			stop
+			
+		if arg 2 is not "최대" or "석탄" or "철" or "금" or "다이아" or "에메랄드":
+			send "{@S} 확률을 설정 할 종류를 입력해주세요. &b<최대/석탄/철/금/다이아/에메랄드>"
+			stop
+		if arg 3 is not set:
+			send "{@S} 확률을 설정 할 숫자를 입력해주세요."
+			stop
+		if arg 3 <= 0:
+			send "{@S} 0보다 작게 설정 할 수 없습니다."
+			stop
+		if arg 2 is "최대":
+			set {Mineral_chance::MAX} to arg 3
+			send ""
+			send "{@S} 성공적으로 최대 확률을 설정 하였습니다."
+			send "{@S} 현재 최대 확률 범위 : &e&l%{Mineral_chance::MAX}%"
+			send ""
+			stop
+		if arg 2 is "석탄":
+			set {Mineral_chance::Coal} to arg 3
+			send ""
+			send "{@S} 성공적으로 &8석탄 &f확률을 설정 하였습니다."
+			send "{@S} 현재 &8석탄 &f확률 : &e&l%{Mineral_chance::Coal} / {Mineral_chance::MAX} * 100%%%    &7&l|    &e현재 범위 : 1 ~ %{Mineral_chance::Coal}%"
+			send "{@S} &f남은 범위 : &e%{Mineral_chance::MAX} - {Mineral_chance::Coal}%"
+			send ""
+			stop
+		if arg 2 is "철":
+			set {Mineral_chance::Iron} to arg 3
+			send ""
+			send "{@S} 성공적으로 &7철 &f확률을 설정 하였습니다."
+			send "{@S} 현재 &7철 &f확률 : &e&l%({Mineral_chance::Iron} - {Mineral_chance::Coal}) / {Mineral_chance::MAX} * 100%%%    &7&l|    &e범위 : %{Mineral_chance::Coal}% ~ %{Mineral_chance::Iron}%"
+			send "{@S} &f남은 범위 : &e%{Mineral_chance::MAX} - {Mineral_chance::Iron}%"
+			send ""
+			stop
+		if arg 2 is "금":
+			set {Mineral_chance::Gold} to arg 3
+			send ""
+			send "{@S} 성공적으로 &e금 &f확률을 설정 하였습니다."
+			send "{@S} 현재 &e금 &f확률 : &e&l%({Mineral_chance::Gold} - {Mineral_chance::Iron}) / {Mineral_chance::MAX} * 100%%%    &7&l|    &e범위 : %{Mineral_chance::Iron}% ~ %{Mineral_chance::Gold}%"
+			send "{@S} &f남은 범위 : &e%{Mineral_chance::MAX} - {Mineral_chance::Gold}%"
+			send ""
+			stop
+		if arg 2 is "다이아":
+			set {Mineral_chance::Diamond} to arg 3
+			send ""
+			send "{@S} 성공적으로 &b다이아 &f확률을 설정 하였습니다."
+			send "{@S} 현재 &b다이아 &f확률 : &e&l%({Mineral_chance::Diamond} - {Mineral_chance::Gold}) / {Mineral_chance::MAX} * 100%%%    &7&l|    &e범위 : %{Mineral_chance::Gold}% ~ %{Mineral_chance::Diamond}%"
+			send "{@S} &f남은 범위 : &e%{Mineral_chance::MAX} - {Mineral_chance::Diamond}%"
+			send ""
+			stop
+		if arg 2 is "에메랄드":
+			set {Mineral_chance::Emerald} to arg 3
+			send ""
+			send "{@S} 성공적으로 &a에메랄드 &f확률을 설정 하였습니다."
+			send "{@S} 현재 &a에메랄드 &f확률 : &e&l%({Mineral_chance::Emerald} - {Mineral_chance::Diamond}) / {Mineral_chance::MAX} * 100%%%    &7&l|    &e범위 : %{Mineral_chance::Diamond}% ~ %{Mineral_chance::Emerald}%"
+			send "{@S} &f남은 범위 : &e%{Mineral_chance::MAX} - {Mineral_chance::Emerald}%"
+			send ""
+			stop
+				
+				
+				
+on inventory close:
+	if inventory name of current inventory of player is "{@S} 광산 광물 설정":
+		delete {chest_Mineral::*}
+		set {_save_check} to 0
+		loop 9 times:
+			add slot {_save_check} of event-inventory to {chest_Mineral::*}
+			add 1 to {_save_check}
+		send "{@S} 광산 광물 설정이 끝났습니다"
