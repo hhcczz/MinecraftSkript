@@ -1,0 +1,220 @@
+options:
+	S : &3[ &bLekoEE &3]&f
+	
+variables:
+	{Leko.MF} = false
+	
+command /경매 [<text>] [<integer>]:
+	permission: Leko.Auction
+	permission message: {@S} 당신은 경매 명령어 사용이 불가능합니다. &a&l<등급설정> &f이상 가능.
+	trigger:
+		if arg 1 is not set:
+			if player is op:
+				send ""
+				send "{@S} <서버이름> 서버 경매 시스템"
+				send ""
+				send "{@S} /경매 시작"
+				send "{@S} /경매 종료"
+				send ""
+			send ""
+			send "{@S} <서버이름> 서버 경매 시스템"
+			send ""
+			send "{@S} /경매 낙찰 <금액> &7- &4입찰에 낙찰된 금액은 환불이 안됩니다."
+			send ""
+			stop	
+		
+		if arg 1 is "시작":
+			if player is not op:
+				send "{@S} 당신은 오피가 아닙니다."
+				stop
+			if {Leko.MFS} = true:
+				send "{@S} 이미 경매가 진행f중입니다."
+				stop
+			if {Leko.MF} = true:
+				send "{@S} 이미 경매가 진a행중입니다."
+				stop
+			set {Leko.MFS} to true
+			broadcast ""
+			broadcast "{@S} 10초뒤 <서버이름> 서버 경매가 시작됩니다!! 자세한건 &e/경매"
+			broadcast ""
+			wait 7 seconds
+			if {Leko.MFS} is not set:
+				stop
+			broadcast ""
+			broadcast "{@S} 3초뒤 <서버이름> 서버 경매가 시작됩니다!! 자세한건 &e/경매"
+			broadcast ""
+			wait 1 seconds
+			if {Leko.MFS} is not set:
+				stop
+			broadcast ""
+			broadcast "{@S} 2초뒤 <서버이름> 서버 경매가 시작됩니다!! 자세한건 &e/경매"
+			broadcast ""
+			wait 1 seconds
+			if {Leko.MFS} is not set:
+				stop
+			broadcast ""
+			broadcast "{@S} 1초뒤 <서버이름> 서버 경매가 시작됩니다!! 자세한건 &e/경매"
+			broadcast ""
+			wait 1 seconds
+			if {Leko.MFS} is not set:
+				stop
+			broadcast ""
+			broadcast "{@S} <서버이름> 서버 경매가 시작되었습니다! 자세한건 &e/경매"
+			broadcast ""
+			set {Leko::Chat::Stop} to true
+			set {Leko.MF_check} to true
+			set {Leko.MF} to true
+			set {Leko.MF_start} to false
+			clear {Leko.MF_amount}
+			clear {Leko.MF_user}
+			clear {Leko.MFS}
+			stop
+				
+				
+		if arg 1 is "종료":
+			if player is not op:
+				send "{@S} 당신은 오피가 아닙니다."
+				stop
+			if {Leko.MFS} is not set:
+				send "{@S} 현재 경매가 진행중이지 않습니다."
+				stop
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast ""
+			broadcast "{@S} 관리자가 강제로 경매를 &c종료&f하였습니다."
+			broadcast "{@S} 경매 종료 관리자 :&b %player%"
+			broadcast ""
+			broadcast ""
+			set {Leko.MF_time} to 0
+			set {Leko.MF} to false
+			clear {Leko.MFS}
+			stop
+			
+		if arg 1 is "낙찰":
+			if arg 2 is not set:
+				send title "&6&l[!] &f경매장" with subtitle "&f입찰 하고싶으신 금액을 적어주세요!" to player for 1 seconds
+				stop
+				
+			if {Leko.MF} = false:
+				send title "&6&l[!] &f경매장" with subtitle "&f현재 경매는 종료되었거나 대기중입니다. &e/경매" to player for 1 seconds
+				stop
+			
+			if {Leko.MF_user} = player:
+				send title "&6&l[!] &f경매장" with subtitle "&f다른 플레이어가 입찰할때까지 기다려주세요. &e/경매" to player for 1 seconds
+				stop
+				
+			set {_money} to arg 2
+			if {_money} > player's money:
+				send title "&6&l[!] &f경매장" with subtitle "&f소유하고 계신 금액보다 높은 금액 입찰 &4불가! &e/경매" to player for 1 seconds
+				stop
+			
+			if {Leko.MF_amount} = arg 2:
+				send title "&6&l[!] &f경매장" with subtitle "&f입찰가 금액과 같은 금액은 &4불가능&f합니다. &e/경매" to player for 1 seconds
+				stop
+				
+			if {Leko.MF_amount} > arg 2:
+				send title "&6&l[!] &f경매장" with subtitle "&f입찰가 보다 낮은 금액 &4불가! &f현재 입찰가 : &e%{Leko.MF_amount}%" to player for 1 seconds
+				send "{@S} 입찰가 보다 낮은 금액은 입찰이 불가능 합니다."
+				send "{@S} 현재 입찰가 :&e %{Leko.MF_amount}%"
+				stop
+			
+			if {Leko.MF} = true:
+				set {Leko.MF_amount} to arg 2
+				set {Leko.MF_user} to player
+				set {Leko.MF_time} to 10
+				
+				if {Leko.MF_check} = true:
+					set {Leko.MF_check} to false
+					while {Leko.MF_time} > 0:
+						clear {t}
+						set {_int} to "%{Leko.MF_amount}%"
+						set {_split.int::*} to {_int} split at ""
+						set {_length} to length of {_int}
+						set {_n} to round up ({_length}/3)
+						
+						loop {_n} times:
+							loop 3 times:
+								if {t} is not set:
+									set {t} to "%{_split.int::%{_length}%}%"
+								else:
+									{_split.int::%{_length}%} is set
+									set {t} to "%{_split.int::%{_length}%}%%{t}%"
+								set {_length} to {_length} - 1
+							loop-number < {_n}
+							set {t} to ",%{t}%"
+				
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast ""
+						broadcast "{@S} 현재 경매 입찰 마감까지 &e&l%{Leko.MF_time}% &f초 남았습니다."
+						broadcast "{@S} 현재 입찰가 :&e %{t}%"
+						broadcast "{@S} 현재 입찰 유저 :&b %{Leko.MF_user}%"
+						broadcast ""
+						broadcast ""
+						remove 1 from {Leko.MF_time}
+						wait 1 seconds
+						if {Leko.MF_time} = 0:
+							set {Leko.MF_start} to false
+							set {Leko.MF_time} to 0
+							set {Leko.MF} to false
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast ""
+							broadcast "{@S} 현재 경매 입찰이 &c마감 &f되었습니다!"
+							broadcast "{@S} 현재 입찰가 :&e %{t}%"
+							broadcast "{@S} 입찰 유저 :&b %{Leko.MF_user}%"
+							broadcast ""
+							play sound "entity.villager.yes" with volume 2 with pitch 1 to player
+				
+				
+		
