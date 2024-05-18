@@ -37,19 +37,22 @@
 ## 진행 과정
 
 + 아래는 경매가 시작되면 나오는 메시지 입니다.
+  
 ![경매-진행과정-1](https://github.com/hhcczz/MinecraftSkript/assets/101077489/fea7411e-ba79-4462-9d65-7aebb4c63c38)
 
 + 아래는 입찰 중 나오는 메시지 입니다.
+  
 ![경매-진행과정-2](https://github.com/hhcczz/MinecraftSkript/assets/101077489/6e8d4675-b7bd-4221-bbf2-d23837c69bd3)
 
 + 아래는 입찰 종료 메시지 입니다.
+  
 ![경매-진행과정-3](https://github.com/hhcczz/MinecraftSkript/assets/101077489/fa83061a-ad77-48c9-af39-335b6183f6a4)
 
 
 ## 성공
 > 마인크래프트 스크립트 카페에서 많은 유저들에게 관심을 보였습니다. ( 추천 게시글 등극 )
 
-+ 아래는 사진 자료 입니다.
++ 아래는 사진 자료 입니다.  
 
 ![경매추천글 성공](https://github.com/hhcczz/MinecraftSkript/assets/101077489/a44eabc2-11f3-442f-b16e-c5d66307daf8)
 
