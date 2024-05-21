@@ -1,0 +1,57 @@
+options:
+	S : &3[ &bLekoEE &3]&f
+	
+command /아이템작명 [<text>] [<text>]:
+	trigger:
+		if arg 1 is not "적용" or "미리보기" or "등록" or "설정":	
+			send "{@S} <서버이름> 서버 아이템 작명 시스템"
+			send ""
+			send "{@S} /아이템작명 &e<등록> <작명이름> &7- &7아이템작명 하고싶은 이름을 등록합니다"
+			send "{@S} /아이템작명 &e<미리보기> &7- 아이템작명 등록한 이름을 미리 출력해봅니다"
+			send "{@S} /아이템작명 &e<적용> &7- 등록한 이름을 적용시킵니다"
+			send ""
+			if player is op:
+				send "{@S} /아이템작명 &e<설정> &7- &7아이템 작명권한 아이템을 설정합니다."
+				send "{@S} &7&n꼭 손에 들고 사용을 하셔야 합니다. 손에 든 아이템이 적용됩니다."
+				send ""
+			stop
+			
+		if arg 1 is "적용":
+			if {Leko::itemname_display::%player%} is not set:
+				send title "&4&l[!] &f경고" with subtitle "&a작명하고싶은 이름을 먼저 등록을 해주세요." to player for 1.5 seconds
+				stop
+			if player's tool is not diamond sword or diamond axe or iron sword or iron axe or stone sword or stone axe or iron pickaxe:
+				send title "&4&l[!] &f경고" with subtitle "&a작명이 불가능한 아이템입니다." to player for 1.5 seconds
+				stop
+			if player has {NameChange.item}:
+				remove 1 of {NameChange.item} from the player
+				make player run cmd "/itemname %{Leko::itemname_display::%player%}%" as op
+				stop
+			else:
+				send title "&4&l[!] &f경고" with subtitle "&a아이템 작명권이 부족합니다." to player for 1.5 seconds
+				stop
+		
+		if arg 1 is "등록":
+			if arg 2 is not set:
+				send title "&4&l[!] &f경고" with subtitle "&a작명하고싶은 이름을 적어주세요." to player for 1.5 seconds
+				stop
+			set {Leko::itemname_display::%player%} to coloured arg 2
+			send "{@S} 정상적으로 등록을 완료하였습니다."
+			send "{@S} 등록된 이름 :&f %{Leko::itemname_display::%player%}%"
+			stop
+		
+		if arg 1 is "미리보기":
+			if {Leko::itemname_display::%player%} is not set:
+				send title "&4&l[!] &f경고" with subtitle "&a작명하고싶은 이름을 먼저 등록을 해주세요." to player for 1.5 seconds
+				stop
+			send "{@S} 등록된 이름 :&f %{Leko::itemname_display::%player%}%"
+			stop
+		
+		if player is op:
+			if arg 1 is "설정":
+				if player's tool is 0 air:
+					send "{@S} 아이템을 들고 명령어를 쳐주세요."
+					stop
+				set {NameChange.item} to player's tool
+				send "{@S} 아이템 작명 권한 아이템이 설정되었습니다. "
+				stop
