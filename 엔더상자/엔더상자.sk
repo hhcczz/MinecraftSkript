@@ -1,0 +1,156 @@
+options:
+	S : &3[ &bLekoEE &3]&f
+
+
+command /엔더상자 [<text>]:
+	trigger:
+		if player is not op:
+			send "&fUnknown command. Type ""/help"" for help."
+			stop
+		
+		if arg 1 is not "아이템설정" or "열쇠설정" or "초기화":
+			send ""
+			send "{@S} <서버 이름> 서버 엔더상자 시스템"
+			send ""
+			send "{@S} /엔더상자 아이템설정"
+			send "{@S} /엔더상자 열쇠설정"
+			send "{@S} /엔더상자 초기화"
+			send ""
+			stop
+		
+		if arg 1 is "아이템설정":
+			set {_gui} to chest inventory with 6 row with name "{@S} &7- &f엔더상자 아이템 설정"
+			loop 54 times:
+				set slot loop-num - 1 of {_gui} to {Leko::enderchest::%loop-num -1%}
+			open {_gui} to player
+			stop
+		
+		if arg 1 is "초기화":
+			set {enderchest.start} to false
+			create bossbar titled "&f테스트" and id "재도전" for player with progress 100 with colors green with style segmented 10
+			send "{@S} 엔더상자 초기화 완료 %{enderchest.start}%"
+			wait 1 seconds
+			remove bossbar "재도전"
+			stop
+		
+		if arg 1 is "열쇠설정":
+			set {_gui} to chest inventory with 1 row with name "{@S} &7- &f엔더상자 열쇠 설정"
+			set slot 0 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+			set slot 1 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+			set slot 2 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+			set slot 3 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+			set slot 4 of {_gui} to {Leko::enderchestKey}      
+			set slot 5 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+			set slot 6 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+			set slot 7 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+			set slot 8 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+			open {_gui} to player
+			stop
+
+
+on inventory close:
+	if inventory name of player's current inventory is "{@S} &7- &f엔더상자 뽑기":
+		wait 2 ticks
+		set slot 4 of current inventory of player to air
+		set {enderchest.start} to false
+		stop
+		
+	if name of event-inventory contains "{@S} &7- &f엔더상자 열쇠 설정":
+		set {Leko::enderchestKey} to slot 4 of event-inventory
+		send "{@S} 엔더상자 열쇠 설정이 끝났습니다."
+		stop
+		
+	if inventory name of player's current inventory is "{@S} &7- &f엔더상자 아이템 설정":
+		delete {Leko::enderchest::*}
+		loop 54 times:
+			if slot loop-num - 1 of event-inventory is not air:
+				set {Leko::enderchest::%loop-num -1%} to slot loop-num - 1 of event-inventory
+		send "{@S} 엔더상자 아이템 설정이 끝났습니다."
+		stop
+			
+on inventory click:
+	if inventory name of current inventory of player is "{@S} &7- &f엔더상자 뽑기" or "&a&3[ &bLeko &a&3] &7- &f아이템":
+		cancel event
+
+on leftclick on ender chest:
+	set {_gui} to chest inventory with 6 row with name "&a&3[ &bLeko &a&3] &7- &f아이템"
+	loop 54 times:
+		set slot loop-num - 1 of {_gui} to {Leko::enderchest::%loop-number - 1%}
+	open {_gui} to player
+	stop
+
+on rightclick on ender chest:
+	cancel event
+	if {enderchest.start} = true:	
+		send title "&4&l[!] &f경고" with subtitle "&f엔더상자 사용중 : &a&l%{enderchest.player}%" to player for 2 seconds
+		stop
+	
+	if 1 of player's tool is not 1 of {Leko::enderchestKey}:
+		send title "&4&l[!] &f경고" with subtitle "&a&l열쇠를 들고 우클릭 해주세요." to player for 2 seconds
+		stop
+	
+	remove 1 of player's tool from player's tool
+	open chest with 1 rows named "{@S} &7- &f엔더상자 뽑기" to player
+	
+	set slot 0 of current inventory of player to yellow stained glass pane
+	set slot 1 of current inventory of player to yellow stained glass pane
+	set slot 2 of current inventory of player to yellow stained glass pane
+	set slot 3 of current inventory of player to yellow stained glass pane
+	set slot 5 of current inventory of player to yellow stained glass pane
+	set slot 6 of current inventory of player to yellow stained glass pane
+	set slot 7 of current inventory of player to yellow stained glass pane
+	set slot 8 of current inventory of player to yellow stained glass pane
+	set {enderchest.start} to true
+	set {enderchest.player} to player
+	set {stack} to random integer between 1 and 18
+	
+	while {enderchest.start} is true:
+		add 1 to {stack}
+		set {enderchest.random} to random integer between 0 and 53
+		if {enderchest.check} = {enderchest.random}:
+			set {enderchest.random} to random integer between 0 and 53
+		set {enderchest.check} to {enderchest.random}
+		
+		set slot 4 of current inventory of player to air
+		wait 3 ticks
+		set slot 4 of current inventory of player to {Leko::enderchest::%{enderchest.random}%}
+		
+		
+		if {stack} <= 20:
+			play raw sound "BLOCK_NOTE_PLING" at player with pitch 1 volume 0.4
+			wait 0.3 seconds
+			
+		if 21 = {stack}:
+			play raw sound "BLOCK_NOTE_PLING" at player with pitch 2 volume 0.4
+			wait 1 seconds
+			
+		if 22 = {stack}:
+			play raw sound "BLOCK_NOTE_PLING" at player with pitch 2 volume 0.4
+			wait 1 seconds
+			
+		if 23 = {stack}:
+			play raw sound "BLOCK_NOTE_PLING" at player with pitch 2 volume 0.4
+			wait 2 seconds
+		
+		if {stack} >= 24:
+			set {_random} to random integer between 1 and 6
+			if {_random} < 2:
+				wait 3 seconds
+				set {stack} to random integer between 10 and 15
+				create bossbar titled "&a&l[!] &f엔더상자 다시 뽑기" and id "재도전" for player with progress 100 with colors green with style segmented 10
+				wait 1.5 seconds
+				remove bossbar "재도전"
+				
+				
+			if {_random} > 2:
+				play raw sound "BLOCK_NOTE_PLING" at player with pitch 2 volume 0.4
+				wait 3 seconds
+				play raw sound "ENTITY_PLAYER_LEVELUP" at player with pitch 1 volume 1
+				set {_item} to slot 4 of current inventory of player
+				give {_item} to player
+				broadcast ""
+				broadcast "{@S} 엔더상자 당첨 아이템 : &b%name of {_item}%"
+				broadcast "{@S} 당첨자 : &a&l%player%"
+				broadcast ""
+				set {enderchest.start} to false
+				close player's inventory
