@@ -1,0 +1,179 @@
+options:
+	S : &3[ &bLekoEE &3]&f
+	
+variables:
+	{Leko::continuebox::check} = false
+	{Leko::continuebox::name} = 0
+	{Leko::continuebox::num} = 0
+
+function continueboxPrize(p:player, num:integer, n:integer):
+	set {_item} to {Leko::continuebox::item::%{_num}%}
+	broadcast ""
+	broadcast "{@S} &a&l%{_n}%&f번째 연속 카운터 당첨 보상 : %name of {_item}%"
+	broadcast "{@S} 개봉자 :&b&l %{_p}%"
+	broadcast ""
+	launch ball large coloured red, purple and white fading to light green and black at {_p}'s location with duration 1
+	give {_item} to {_p}
+
+command /연속카운터 [<text>]:
+	trigger:
+		if player is op:
+			if arg 1 is not "상자설정" or "아이템설정":
+				send ""	
+				send "{@S} <서버 이름> 연속 카운터 설명"
+				send ""
+				send "{@S} /연속카운터 상자설정"	
+				send "{@S} /연속카운터 아이템설정"
+				send ""	
+				stop
+			
+			if arg 1 is "상자설정":
+				set {_gui} to chest inventory with 1 row with name "{@S} 연속카운터"
+				set slot 0 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+				set slot 1 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+				set slot 2 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+				set slot 3 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+				set slot 4 of {_gui} to {Leko::continuebox::box}      
+				set slot 5 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+				set slot 6 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+				set slot 7 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+				set slot 8 of {_gui} to black stained glass pane named "&a&f[ &e빈 공간 &f]"
+				open {_gui} to player
+				stop
+				
+			if arg 1 is "아이템설정":
+				set {_gui} to chest inventory with 6 row with name "{@S} 연속아이템설정"
+				loop 54 times:
+					set slot loop-num - 1 of {_gui} to {Leko::continuebox::item::%loop-num -1%}
+				open {_gui} to player
+
+on inventory close:
+	if name of event-inventory contains "{@S} 연속카운터":
+		set {Leko::continuebox::box} to slot 4 of event-inventory
+		send ""
+		send "{@S} 연속카운터 상자 설정을 정상적으로 &a완료 &f하였습니다."
+		send ""
+		
+	else if name of event-inventory contains "{@S} 연속아이템설정":
+		delete {Leko::continuebox::item::*}
+		loop 54 times:
+			if slot loop-num - 1 of event-inventory is not air:
+				set {Leko::continuebox::item::%loop-num -1%} to slot loop-num - 1 of event-inventory
+		send ""
+		send "{@S} 연속카운터 아이템 상자 설정을 정상적으로 &a완료 &f하였습니다."
+		send ""
+
+on rightclick:
+	if 1 of player's tool is 1 of {Leko::continuebox::box}:
+		cancel event
+		if player is sneaking:
+			set {_gui} to chest inventory with 6 row with name "&3[ &bLeko &3] &7- &f아이템"
+			loop 54 times:
+				set slot loop-num - 1 of {_gui} to {Leko::continuebox::item::%loop-num -1%}
+			open {_gui} to player
+			stop
+			
+		if {Leko::continuebox::check} = true:
+			send ""
+			send "{@S} 현재 연속카운터를 개봉 중 입니다. 조금있다가 개봉해주세요."
+			send "{@S} 현재 개봉자 :&b&l %{Leko::continuebox::name}%"
+			send ""
+			stop
+			
+		remove {Leko::continuebox::box} from player's tool
+		set {Leko::continuebox::check} to true
+		set {Leko::continuebox::name} to player
+		set {Leko::continuebox::Loop} to 1
+		
+		broadcast ""
+		broadcast "{@S} &a연속 카운터 &f개봉을 시작합니다."
+		broadcast "{@S} 개봉자 : &b&l%player%"
+		broadcast ""
+		play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 for player
+		
+		while {Leko::continuebox::check} is true:
+			add 1 to {Leko::continuebox::num}
+			
+			wait 1 seconds
+			
+			if {Leko::continuebox::Loop} is not 1:
+				broadcast ""
+				broadcast "{@S} &a&l%{Leko::continuebox::num}%&f번째 연속 카운터 개봉에 &c실패&f하였습니다." 
+				broadcast "{@S} 개봉자 :&b&l %player%"
+				broadcast ""
+				set {Leko::continuebox::check} to false
+				set {Leko::continuebox::num} to 0
+				play sound "entity.villager.no" with volume 10 and pitch 1 for player
+				stop
+				
+			wait 1 seconds
+			
+			broadcast ""
+			broadcast "{@S} &a연속 카운터 &f개봉 중.." 
+			broadcast "{@S} 개봉자 :&b&l %player%"
+			broadcast ""
+			play sound "entity.item.pickup" with volume 10 and pitch 1 for player
+			
+			
+			wait 1 seconds
+			
+			broadcast ""
+			broadcast "{@S} &a연속 카운터 &f개봉 중...." 
+			broadcast "{@S} 개봉자 :&b&l %player%"
+			broadcast ""
+			play sound "entity.item.pickup" with volume 10 and pitch 1 for player
+			
+			wait 1 seconds
+			
+			broadcast ""
+			broadcast "{@S} &a연속 카운터 &f개봉 중......" 
+			broadcast "{@S} 개봉자 :&b&l %player%"
+			broadcast ""
+			play sound "entity.item.pickup" with volume 10 and pitch 1 for player
+			
+			wait 1 seconds
+			
+			set {Leko::continuebox::random} to random integer between 1 and 40
+			set {Leko::continuebox::Loop} to random integer between 1 and 2
+			
+			if {Leko::continuebox::random} = 1:
+				continueboxPrize(player,0,{Leko::continuebox::num}) # 아이템 이름 적어두시면 됩니다.
+				
+			if 2 <= {Leko::continuebox::random}:
+				if {Leko::continuebox::random} <= 5:
+					continueboxPrize(player,1,{Leko::continuebox::num}) # 아이템 이름 적어두시면 됩니다.
+
+			if 6 <= {Leko::continuebox::random}:
+				if {Leko::continuebox::random} <= 10:
+					continueboxPrize(player,2,{Leko::continuebox::num}) # 아이템 이름 적어두시면 됩니다.
+			
+			if 11 <= {Leko::continuebox::random}:
+				if {Leko::continuebox::random} <= 15:
+					continueboxPrize(player,3,{Leko::continuebox::num}) # 아이템 이름 적어두시면 됩니다.
+			
+			if 16 <= {Leko::continuebox::random}:
+				if {Leko::continuebox::random} <= 20:
+					continueboxPrize(player,4,{Leko::continuebox::num}) # 아이템 이름 적어두시면 됩니다.
+			
+			if 21 <= {Leko::continuebox::random}:
+				if {Leko::continuebox::random} <= 25:
+					continueboxPrize(player,5,{Leko::continuebox::num}) # 아이템 이름 적어두시면 됩니다.
+					
+			if 26 <= {Leko::continuebox::random}:
+				if {Leko::continuebox::random} <= 30:
+					continueboxPrize(player,6,{Leko::continuebox::num}) # 아이템 이름 적어두시면 됩니다.
+			
+			if 31 <= {Leko::continuebox::random}:
+				if {Leko::continuebox::random} <= 35:
+					continueboxPrize(player,7,{Leko::continuebox::num}) # 아이템 이름 적어두시면 됩니다.
+			
+			if 36 <= {Leko::continuebox::random}:
+				if {Leko::continuebox::random} <= 40:
+					continueboxPrize(player,8,{Leko::continuebox::num}) # 아이템 이름 적어두시면 됩니다.
+
+on inventory click:
+	if name of player's top inventory contains "&3[ &bLeko &3] &7- &f아이템":
+		close player's inventory
+		send "{@S} 인벤토리 클릭이 &4금지 &f되어있습니다!"
+		cancel event
+		stop
